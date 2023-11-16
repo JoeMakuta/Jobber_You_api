@@ -1,5 +1,6 @@
 import sequelize from "./connexion.db";
 import "../models/index.model";
+import "../db/relations.db";
 
 const dbconnexion = async () => {
   try {

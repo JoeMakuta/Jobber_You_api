@@ -9,65 +9,62 @@ import sequelize from "../db/connexion.db";
 import { UUID } from "crypto";
 import { Json } from "sequelize/types/utils";
 
-class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
-  declare user_id: string;
-  declare f_name: string;
-  declare l_name: string;
-  declare user_name: string;
-  declare telephone: Json;
-  declare email: string;
-  declare password: string;
-  declare roles: Json;
+class Job extends Model<InferAttributes<Job>, InferCreationAttributes<Job>> {
+  declare job_id: string;
+  declare poster_id: Json;
+  declare job_title: string;
+  declare job_description: string;
+  declare salary_range: string;
+  declare posting_date: Date;
+  declare closing_date: Date;
   declare skills: Json;
+  declare location: Json;
 }
 
-User.init(
+Job.init(
   {
-    user_id: {
+    job_id: {
       type: DataTypes.UUID,
       primaryKey: true,
       allowNull: false,
     },
-    f_name: {
+    poster_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    job_title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    l_name: {
+    job_description: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    user_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    telephone: {
-      type: DataTypes.JSON,
-      allowNull: true,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    password: {
+    salary_range: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-
-    roles: {
-      type: DataTypes.JSON,
+    posting_date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    closing_date: {
+      type: DataTypes.DATE,
       allowNull: false,
     },
     skills: {
       type: DataTypes.JSON,
-      allowNull: true,
+      allowNull: false,
+    },
+    location: {
+      type: DataTypes.JSON,
+      allowNull: false,
     },
   },
   {
-    tableName: "user",
+    tableName: "job",
     sequelize,
   }
 );
 
-export default User;
+export default Job;
