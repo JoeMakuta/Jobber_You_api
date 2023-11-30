@@ -1,4 +1,5 @@
 import {
+  CreationOptional,
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
@@ -6,33 +7,29 @@ import {
 } from "sequelize";
 import sequelize from "../db/connexion.db";
 
-class Skill extends Model<
-  InferAttributes<Skill>,
-  InferCreationAttributes<Skill>
-> {
-  declare skill_id: string;
-  declare skill_name: string;
+class Role extends Model<InferAttributes<Role>, InferCreationAttributes<Role>> {
+  declare role_id: string;
+  declare role_name: string;
 }
 
-Skill.init(
+Role.init(
   {
-    skill_id: {
+    role_id: {
       type: DataTypes.UUID,
       primaryKey: true,
       allowNull: false,
-      unique: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    skill_name: {
+    role_name: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
     },
   },
   {
-    tableName: "skill",
+    tableName: "role",
     sequelize,
   }
 );
 
-export default Skill;
+export default Role;
