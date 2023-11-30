@@ -27,6 +27,7 @@ Job.init(
       type: DataTypes.UUID,
       primaryKey: true,
       allowNull: false,
+      defaultValue: DataTypes.UUIDV4,
     },
     poster_id: {
       type: DataTypes.UUID,

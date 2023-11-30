@@ -1,4 +1,5 @@
 import {
+  CreationOptional,
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
@@ -10,7 +11,7 @@ class Skill extends Model<
   InferAttributes<Skill>,
   InferCreationAttributes<Skill>
 > {
-  declare skill_id: string;
+  declare skill_id: CreationOptional<string>;
   declare skill_name: string;
 }
 
