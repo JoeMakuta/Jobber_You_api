@@ -8,7 +8,7 @@ import {
 import sequelize from "../db/connexion.db";
 
 class Role extends Model<InferAttributes<Role>, InferCreationAttributes<Role>> {
-  declare role_id: string;
+  declare role_id: CreationOptional<Role>;
   declare role_name: string;
 }
 
