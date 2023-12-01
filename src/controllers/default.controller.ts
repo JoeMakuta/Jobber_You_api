@@ -6,7 +6,7 @@ import User from "../models/user.model";
 import * as bcrypt from "bcrypt";
 
 import * as dotenv from "dotenv";
-import { convertToLowerRmvSpace } from "../helpers/helper";
+
 dotenv.config();
 
 const { DEFAULT_USER, DEFAULT_ROLES, DEFAULT_SKILLS } = process.env;

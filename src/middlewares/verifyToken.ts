@@ -23,7 +23,7 @@ const verifyToken = async (
     if (user) {
       req.auth = user;
       next();
-    } else throw new httpError.NotFound("The admin does not exist !");
+    } else throw new httpError.Forbidden("Invalid Token");
   } catch (error) {
     next(error);
   }
