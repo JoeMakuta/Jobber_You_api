@@ -49,7 +49,9 @@ export default class UserController {
       }
       const userExist = await User.findOne({ where: { email: email } });
       if (userExist) {
-        throw new httpError.Conflict();
+        throw new httpError.Conflict(
+          "This email already has an active account !"
+        );
       }
 
       const newRoles: Role[] = [];
