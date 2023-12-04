@@ -16,14 +16,12 @@ import Skill from "./skill.model";
 import Location from "./location.model";
 
 class Job extends Model<InferAttributes<Job>, InferCreationAttributes<Job>> {
-  declare job_id: string;
+  declare job_id: CreationOptional<Job>;
   declare job_title: string;
   declare job_description: string;
   declare salary_range: string;
   declare posting_date: Date;
   declare closing_date: Date;
-  declare skills: Json;
-  declare location: Json;
 
   declare poster_id: ForeignKey<User["user_id"]>;
 
@@ -58,14 +56,6 @@ Job.init(
     },
     closing_date: {
       type: DataTypes.DATE,
-      allowNull: false,
-    },
-    skills: {
-      type: DataTypes.JSON,
-      allowNull: false,
-    },
-    location: {
-      type: DataTypes.JSON,
       allowNull: false,
     },
   },

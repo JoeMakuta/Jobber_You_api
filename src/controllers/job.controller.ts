@@ -6,6 +6,7 @@ import Skill from "../models/skill.model";
 import { convertToLowerRmvSpace } from "../helpers/helper";
 import Job from "../models/job.model";
 import Location from "../models/location.model";
+import { IUserRequest } from "../@types/request.type";
 
 export default class JobController {
   public static async getAll(req: Request, res: Response, next: NextFunction) {
@@ -24,7 +25,11 @@ export default class JobController {
     }
   }
 
-  public static async add(req: Request, res: Response, next: NextFunction) {
+  public static async add(
+    req: IUserRequest,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const {
         location,
@@ -60,11 +65,15 @@ export default class JobController {
         }
       });
 
-      const Response = await Job.create({
+      const job_user: User = req.auth;
+
+      const Response = await job_user.createJob({
         ...req.body,
       });
 
-      if (job_location) Response.setLocations([job_location]);
+      console.log(Response);
+
+      Response.setLocations([job_location]);
       Response.setSkills(newSkills);
 
       if (Response) {
