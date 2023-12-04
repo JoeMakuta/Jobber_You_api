@@ -21,7 +21,7 @@ Job.belongsToMany(Skill, { through: "job_skills", foreignKey: "job_id" });
 Skill.belongsToMany(Job, { through: "job_skills", foreignKey: "skill_id" });
 
 //Relation Job and Location
-Job.belongsToMany(Skill, { through: "job_locations", foreignKey: "job_id" });
+Job.belongsToMany(Location, { through: "job_locations", foreignKey: "job_id" });
 Location.belongsToMany(Job, {
   through: "job_locations",
   foreignKey: "location_id",

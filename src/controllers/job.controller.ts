@@ -73,8 +73,8 @@ export default class JobController {
 
       console.log(Response);
 
-      Response.setLocations([job_location]);
       Response.setSkills(newSkills);
+      Response.setLocations([job_location]);
 
       if (Response) {
         res.json(<IServerResponse>{
@@ -85,6 +85,7 @@ export default class JobController {
         });
       }
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
