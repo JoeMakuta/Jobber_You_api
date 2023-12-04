@@ -24,6 +24,7 @@ export default class LocationController {
   public static async add(req: Request, res: Response, next: NextFunction) {
     try {
       const { location_name }: { location_name: string } = req.body;
+
       const new_location = convertToLowerRmvSpace(location_name);
       const Response = await Location.create({
         location_name: new_location,

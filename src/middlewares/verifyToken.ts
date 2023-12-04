@@ -5,6 +5,8 @@ import * as httpError from "http-errors";
 import { Model } from "sequelize";
 import { IPayLoad } from "../@types/request.type";
 import User from "../models/user.model";
+import Role from "../models/role.model";
+import Skill from "../models/skill.model";
 
 const verifyToken = async (
   req: IUserRequest,
@@ -19,7 +21,8 @@ const verifyToken = async (
       TOKEN_SECRET as string
     ) as IPayLoad;
 
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(id, { include: [Role, Skill] });
+
     if (user) {
       req.auth = user;
       next();

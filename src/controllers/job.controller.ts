@@ -71,8 +71,6 @@ export default class JobController {
         ...req.body,
       });
 
-      console.log(Response);
-
       Response.setSkills(newSkills);
       Response.setLocations([job_location]);
 
@@ -96,16 +94,47 @@ export default class JobController {
     next: NextFunction
   ) {
     const { job_id } = req.params;
+    const {
+      location,
+      skills,
+    }: { location: "remote" | "on-site" | "hybrid"; skills: string[] } =
+      req.body;
+
     try {
       const Response = await Job.findByPk(job_id);
       if (!Response) {
         throw new httpError.NotFound();
       }
 
+      const job_location = await Location.findOne({
+        where: { location_name: location },
+      });
+      if (!job_location) {
+        throw new httpError.NotFound("Location not found");
+      }
+
+      const newSkills: Skill[] = [];
+      skills.forEach(async (skill) => {
+        const skillExists = await Skill.findOne({
+          where: { skill_name: skill },
+        });
+        if (skillExists) newSkills.push(skillExists);
+        else {
+          const newSkillName = convertToLowerRmvSpace(skill);
+          const newSkill = await Skill.create({
+            ...{ skill_name: newSkillName },
+          });
+          newSkills.push(newSkill);
+        }
+      });
+
       const ResponseUpdate = await Response?.update({
         ...Response,
         ...req.body,
       });
+
+      Response.setSkills(newSkills);
+      Response.setLocations([job_location]);
 
       if (ResponseUpdate) {
         res.json(<IServerResponse>{
