@@ -7,6 +7,7 @@ import { convertToLowerRmvSpace } from "../helpers/helper";
 import Job from "../models/job.model";
 import Location from "../models/location.model";
 import { IUserRequest } from "../@types/request.type";
+import { Op } from "sequelize";
 
 export default class JobController {
   public static async getAll(req: Request, res: Response, next: NextFunction) {
@@ -89,7 +90,7 @@ export default class JobController {
   }
 
   public static async updateOne(
-    req: Request,
+    req: IUserRequest,
     res: Response,
     next: NextFunction
   ) {
@@ -168,8 +169,45 @@ export default class JobController {
     }
   }
 
+  public static async search(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { search } = req.query;
+      console.log("Search :", search?.toString().toLowerCase());
+
+      const Response = await Job.findAll({
+        where: {
+          [Op.or]: [
+            {
+              job_title: {
+                [Op.substring]: search?.toString().toLowerCase(),
+              },
+            },
+            {
+              job_description: {
+                [Op.substring]: search?.toString().toLowerCase(),
+              },
+            },
+          ],
+        },
+      });
+
+      if (Response) {
+        res.json(<IServerResponse>{
+          message: "Success",
+          data: Response,
+          error: null,
+          status: 200,
+        });
+      } else {
+        throw new httpError.NotFound("Job not found");
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
   public static async deleteOne(
-    req: Request,
+    req: IUserRequest,
     res: Response,
     next: NextFunction
   ) {
