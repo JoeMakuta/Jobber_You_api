@@ -172,7 +172,8 @@ export default class JobController {
   public static async search(req: Request, res: Response, next: NextFunction) {
     try {
       const { search } = req.query;
-      console.log("Search :", search?.toString().toLowerCase());
+      let search_key = search?.toString();
+      search_key = search_key?.toLocaleLowerCase()
 
       const Response = await Job.findAll({
         where: {

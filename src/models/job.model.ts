@@ -9,8 +9,6 @@ import {
   Model,
 } from "sequelize";
 import sequelize from "../db/connexion.db";
-import { UUID } from "crypto";
-import { Json } from "sequelize/types/utils";
 import User from "./user.model";
 import Skill from "./skill.model";
 import Location from "./location.model";
