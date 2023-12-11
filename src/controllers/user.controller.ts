@@ -129,6 +129,7 @@ export default class UserController {
     next: NextFunction
   ) {
     const { user_id } = req.params;
+    const { roles, skills }: { roles: string[]; skills: string[] } = req.body;
     try {
       const Response = await User.findByPk(user_id);
       if (!Response) {
@@ -138,10 +139,34 @@ export default class UserController {
       const salt: string = await bcrypt.genSalt(10);
       const password: string = await bcrypt.hash(req.body.password, salt);
 
+      const newRoles: Role[] = [];
+      roles.forEach(async (role) => {
+        const hh = await Role.findOne({ where: { role_name: role } });
+        if (hh) newRoles.push(hh);
+      });
+
+      const newSkills: Skill[] = [];
+      skills.forEach(async (skill) => {
+        const skillExists = await Skill.findOne({
+          where: { skill_name: skill },
+        });
+        if (skillExists) newSkills.push(skillExists);
+        else {
+          const newSkillName = convertToLowerRmvSpace(skill);
+          const newSkill = await Skill.create({
+            ...{ skill_name: newSkillName },
+          });
+          newSkills.push(newSkill);
+        }
+      });
+
       const ResponseUpdate = await Response?.update({
         ...Response,
         ...{ ...req.body, password },
       });
+
+      ResponseUpdate.setRoles(newRoles);
+      ResponseUpdate.setSkills(newSkills);
 
       if (ResponseUpdate) {
         res.json(<IServerResponse>{

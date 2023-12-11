@@ -1,36 +1,36 @@
-// import { NextFunction, Request, Response } from "express";
-// import jwt, { JwtPayload } from "jsonwebtoken";
-// import { IUserRequest } from "../@types/request.type";
-// import * as httpError from "http-errors";
-// import { Model } from "sequelize";
-// import { IPayLoad } from "../@types/request.type";
-// import User from "../models/user.model";
-// import Role from "../models/role.model";
+import { NextFunction, Request, Response } from "express";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { IUserRequest } from "../@types/request.type";
+import * as httpError from "http-errors";
+import { IPayLoad } from "../@types/request.type";
+import User from "../models/user.model";
+import Role from "../models/role.model";
+import Job from "../models/job.model";
 
-// const roleGuard = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ): Promise<void> => {
-//   const { TOKEN_SECRET } = process.env;
-//   try {
-//     const token: string = req.headers.authorization?.split(" ")[1] as string;
-//     const { id, email }: IPayLoad = jwt.verify(
-//       token,
-//       TOKEN_SECRET as string
-//     ) as IPayLoad;
+const roleGuard = async (
+  req: IUserRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const current_user: User = req.auth;
 
-//     const user = await User.findByPk(id, {
-//       include: [{ model: Role, through: { attributes: [] } }],
-//     });
+    const job_poster = await Role.findOne({
+      where: { role_name: "job_poster" },
+    });
 
-//     if (user?.dataValues) {
-//       req.auth = user;
-//       next();
-//     } else throw new httpError.NotFound("The admin does not exist !");
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+    if (job_poster) {
+      if (
+        current_user.Roles.filter(
+          (elt) => elt.dataValues.role_name == "job_poster"
+        ).length > 0
+      )
+        next();
+      else throw new httpError.Forbidden("You have no role to create a job");
+    }
+  } catch (error) {
+    next(error);
+  }
+};
 
-// export default roleGuard;
+export default roleGuard;

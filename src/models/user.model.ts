@@ -1,16 +1,19 @@
 import {
   CreationOptional,
   DataTypes,
+  HasManyCreateAssociationMixin,
   HasManyGetAssociationsMixin,
   HasManySetAssociationsMixin,
   InferAttributes,
   InferCreationAttributes,
   Model,
+  NonAttribute,
 } from "sequelize";
 import sequelize from "../db/connexion.db";
 import { Json } from "sequelize/types/utils";
 import Role from "./role.model";
 import Skill from "./skill.model";
+import Job from "./job.model";
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare user_id: string;
@@ -25,6 +28,10 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
 
   declare getRoles: HasManyGetAssociationsMixin<Role>;
   declare getSkills: HasManyGetAssociationsMixin<Skill>;
+
+  declare createJob: HasManyCreateAssociationMixin<Job, "poster_id">;
+
+  declare Roles: NonAttribute<Role[]>;
 }
 
 User.init(
